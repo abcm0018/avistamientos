@@ -10,7 +10,6 @@ export const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     justifyContent: 'space-between',
-    paddingHorizontal: 24,
     paddingTop: 20,
     paddingBottom: 32,
   },

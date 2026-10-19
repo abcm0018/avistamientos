@@ -1,13 +1,95 @@
 import { ColorsApp } from '@/constants/theme';
+import { useLocationRequest } from '@/hooks/useLocationRequest';
+import { useSighting } from '@/hooks/useSighting';
+import { ROUTES } from '@/navigation/routes';
+import { capturePhoto } from '@/services/camera';
 import { styles } from '@/styles/init';
 import { Image } from 'expo-image';
+import { router } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
+import { useRef, useState } from 'react';
  
 
-import { ImageBackground, Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, ImageBackground, Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function InitScreen() {
+
+    const { isLoading, requestLocation } = useLocationRequest();
+    const [ isCameraActive, setIsCameraActive ] = useState(false);
+    const { saveDraft, clearDraft } = useSighting();
+    const reportInProgress = useRef(false);
+
+    const isBusy = isLoading || isCameraActive;
+
+    async function handleReportPress() {
+        if (reportInProgress.current) {
+            return;
+        }
+
+        reportInProgress.current = true;
+        clearDraft();
+
+        try {
+            const locationResult = await requestLocation();
+
+            if (locationResult === null) {
+                return;
+            }
+
+            if (!locationResult.ok) {
+                router.push({
+                    pathname: ROUTES.location,
+                    params: {
+                        reason: locationResult.reason,
+                    },
+                });
+
+                return;
+            }
+
+            setIsCameraActive(true);
+
+            const cameraResult = await capturePhoto();
+
+            switch (cameraResult.status) {
+                case 'captured':
+                    saveDraft({
+                        location: locationResult.location,
+                        photo: cameraResult.photo,
+                    });
+
+                    Alert.alert(
+                        'Fotografía capturada',
+                        'La captura ha terminado correctamente.'
+                    );
+                    break;
+
+                case 'cancelled':
+                    break;
+
+                case 'permission-denied':
+                    Alert.alert(
+                        'Permiso de cámara necesario',
+                        cameraResult.canAskAgain
+                            ? 'Necesitamos permiso de cámara para tomar la fotografía. Puedes volver a intentarlo.'
+                            : 'El permiso de cámara está bloqueado. Debes habilitarlo en los ajustes de la aplicación.'
+                    );
+                    break;
+
+                case 'error':
+                    Alert.alert(
+                        'No se pudo completar la captura',
+                        'Inténtalo de nuevo.'
+                    );
+                    break;
+            }
+        } finally {
+            setIsCameraActive(false);
+            reportInProgress.current = false;
+        }
+    }
+
     return (
         <ImageBackground 
              source={require('../../assets/images/avispa.png')}
@@ -18,7 +100,7 @@ export default function InitScreen() {
                             <View style={styles.header}>
                                 <View style={styles.logoPlaceholder}>
                                 <Image
-                                    source={require('../../assets/images/avispa.svg')}
+                                    source={require('../../assets/images/avispa-icono.png')}
                                     style={styles.logoImage}
                                     contentFit="contain"
                                     tintColor={ColorsApp.primary}
@@ -29,7 +111,22 @@ export default function InitScreen() {
                                 <Text style={styles.subtitle}>{'Ayuda a proteger \nnuestro entorno'}</Text>
                             </View>
                             <View style={styles.actions}>
-                                <Pressable style={styles.primaryButton} accessibilityRole="button">
+                            <Pressable
+                                style={styles.primaryButton}
+                                accessibilityRole="button"
+                                onPress={handleReportPress}
+                                disabled={isBusy}
+                                accessibilityState={{
+                                    disabled: isBusy,
+                                    busy: isBusy,
+                                }}
+                            >
+                                {isBusy ? (
+                                    <ActivityIndicator
+                                        size="small"
+                                        color={ColorsApp.white}
+                                    />
+                                ) : (
                                     <SymbolView
                                         name={{
                                             ios: 'camera.fill',
@@ -40,22 +137,30 @@ export default function InitScreen() {
                                         tintColor={ColorsApp.white}
                                         accessible={false}
                                     />
-                                    <Text style={styles.primaryButtonText}>Comunicar avistamiento</Text>
-                                    <SymbolView
-                                        name={{
-                                            ios: 'chevron.right',
-                                            android: 'chevron_right',
-                                            web: 'chevron_right',
-                                        }}
-                                        size={20}
-                                        tintColor={ColorsApp.white}
-                                        accessible={false}
-                                    />
-                                </Pressable>
+                                )}
+
+                                <Text style={styles.primaryButtonText}>
+                                    {isLoading
+                                        ? 'Obteniendo ubicación…'
+                                        : isCameraActive
+                                            ? 'Cámara en curso…'
+                                            : 'Comunicar avistamiento'}
+                                </Text>
+                                <SymbolView
+                                    name={{
+                                        ios: 'chevron.right',
+                                        android: 'chevron_right',
+                                        web: 'chevron_right',
+                                    }}
+                                    size={20}
+                                    tintColor={ColorsApp.white}
+                                    accessible={false}
+                                />
+                            </Pressable>
                                 <Pressable style={styles.secondaryButton} accessibilityRole="button">
                                     <View style={styles.actionIconCircle}>
                                         <Image
-                                            source={require('../../assets/images/avispa.svg')}
+                                            source={require('../../assets/images/avispa-icono.png')}
                                             style={styles.actionIconImage}
                                             contentFit="contain"
                                             tintColor={ColorsApp.white}
