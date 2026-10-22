@@ -23,6 +23,8 @@ export async function capturePhoto(): Promise<CameraResult> {
             quality: 1,
         });
 
+        const captureReturnedAt = new Date().toISOString();
+
         if (result.canceled) {
             return {
                 status: 'cancelled',
@@ -40,6 +42,7 @@ export async function capturePhoto(): Promise<CameraResult> {
         return {
             status: 'captured',
             photo,
+            captureReturnedAt,
         };
     } catch (error) {
         console.warn('Error al abrir o utilizar la cámara:', error);

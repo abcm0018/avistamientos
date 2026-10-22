@@ -68,6 +68,7 @@ export const ColorsApp = {
   primary: '#2E7D32',
   primaryLight: '#E8F0E9',
   background: '#F5F5F5',
+  infoBackground: '#EDF6F8',
   text: '#1B1B1B',
   white: '#FFFFFF',
 };

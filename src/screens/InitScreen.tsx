@@ -42,6 +42,9 @@ export default function InitScreen() {
                     pathname: ROUTES.location,
                     params: {
                         reason: locationResult.reason,
+                        ...(typeof locationResult.canAskAgain === 'boolean'
+                        ? { canAskAgain: String(locationResult.canAskAgain) }
+                        : {}),
                     },
                 });
 
@@ -57,12 +60,11 @@ export default function InitScreen() {
                     saveDraft({
                         location: locationResult.location,
                         photo: cameraResult.photo,
+                        captureReturnedAt: cameraResult.captureReturnedAt,
+                        photoAccepted: false,
                     });
 
-                    Alert.alert(
-                        'Fotografía capturada',
-                        'La captura ha terminado correctamente.'
-                    );
+                    router.push(ROUTES.photoReview);
                     break;
 
                 case 'cancelled':
