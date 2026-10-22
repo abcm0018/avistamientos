@@ -16,3 +16,4 @@ export type LocationResult =
       reason: LocationProblem;
       canAskAgain?: boolean;
     };
+

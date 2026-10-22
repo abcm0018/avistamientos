@@ -25,11 +25,21 @@ export const styles = StyleSheet.create({
     marginBottom: 28,
   },
   illustration: {
+    width: '100%',
     aspectRatio: 1.15,
     backgroundColor: ColorsApp.background,
     borderRadius: 16,
+    overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  illustrationImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
   },
   message: {
     fontSize: 18,
@@ -45,7 +55,10 @@ export const styles = StyleSheet.create({
     gap: 12,
     padding: 16,
     borderRadius: 14,
-    backgroundColor: ColorsApp.primaryLight,
+    backgroundColor: ColorsApp.infoBackground,
+  },
+  messageEmphasis:{
+    fontWeight: '700',
   },
   noticeText: {
     flex: 1,
@@ -71,4 +84,11 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
     color: ColorsApp.white, 
   },
+  problemMessage: {
+    marginBottom: 24,
+    fontSize: 16,
+    lineHeight: 23,
+    color: ColorsApp.text,
+    textAlign: 'center',
+},
 });

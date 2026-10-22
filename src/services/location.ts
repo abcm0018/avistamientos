@@ -1,8 +1,19 @@
 import type { LocationResult } from '@/types/location';
 import * as Location from 'expo-location';
 
-export async function obtainLocation(): Promise<LocationResult> {
+export async function obtainLocation(
+    { requestPermission = true }: { requestPermission?: boolean } = {}
+): Promise<LocationResult> {
     try{
+        const servicesEnabled = await Location.hasServicesEnabledAsync();
+
+        if(!servicesEnabled){
+            return{
+                ok: false,
+                reason: 'services-disabled',
+            };            
+        }
+
         let permission = await Location.getForegroundPermissionsAsync();
 
         console.log('Estado inicial del permiso:', {
@@ -11,7 +22,7 @@ export async function obtainLocation(): Promise<LocationResult> {
             canAskAgain: permission.canAskAgain,
         });
 
-        if(!permission.granted && permission.canAskAgain){
+        if(requestPermission && !permission.granted && permission.canAskAgain){
             permission = await Location.requestForegroundPermissionsAsync();
         }
 
@@ -21,15 +32,6 @@ export async function obtainLocation(): Promise<LocationResult> {
                 reason: 'permission-denied',
                 canAskAgain: permission.canAskAgain,
             };
-        }
-
-        const servicesEnabled = await Location.hasServicesEnabledAsync();
-
-        if(!servicesEnabled){
-            return{
-                ok: false,
-                reason: 'services-disabled',
-            };            
         }
 
         const location = await Location.getCurrentPositionAsync();
