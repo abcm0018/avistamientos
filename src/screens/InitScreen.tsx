@@ -159,7 +159,7 @@ export default function InitScreen() {
                                     accessible={false}
                                 />
                             </Pressable>
-                                <Pressable style={styles.secondaryButton} accessibilityRole="button">
+                                <Pressable style={styles.secondaryButton} accessibilityRole="button" onPress={() => router.push(ROUTES.aboutSpecies)}>
                                     <View style={styles.actionIconCircle}>
                                         <Image
                                             source={require('../../assets/images/avispa-icono.png')}
@@ -186,7 +186,7 @@ export default function InitScreen() {
                                     </View>
                                     <Text style={styles.secondaryButtonText}>Cómo colaborar</Text>
                                 </Pressable>
-                                <Pressable style={styles.secondaryButton} accessibilityRole="button">
+                                <Pressable style={styles.secondaryButton} accessibilityRole="button" onPress={() => router.push(ROUTES.aboutProject)}>
                                     <View style={styles.actionIconCircle}>
                                         <SymbolView
                                             name={{
