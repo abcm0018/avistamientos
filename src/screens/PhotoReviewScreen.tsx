@@ -68,20 +68,25 @@ export const PhotoReviewScreen = () => {
                 case 'cancelled':
                     break;
                 case 'permission-denied':
-                    Alert.alert(
-                    'Permiso de cámara necesario',
-                    result.canAskAgain
-                        ? 'Permite el acceso a la cámara para repetir la fotografía.'
-                        : 'Habilita el permiso de cámara en los ajustes de la aplicación.'
-                    );
-                    break;
                 case 'error':
-                     Alert.alert(
+                    router.replace({
+                        pathname: ROUTES.camera,
+                        params:{
+                            mode: 'retake',
+                            reason: result.status,
+                            ...(result.status === 'permission-denied'
+                                ? { 
+                                    canAskAgain: String(result.canAskAgain),
+                                }
+                                : {}),
+                        },
+                    });
+                    Alert.alert(
                     'No se pudo completar la captura',
                     'Puedes volver a intentarlo.'
                     );
                     break;
-            }
+            };
         } finally {
             retakeInProgress.current = false;
             setIsRetaking(false);

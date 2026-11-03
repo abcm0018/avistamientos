@@ -1,6 +1,30 @@
 import * as ImagePicker from 'expo-image-picker';
 
-import type { CameraResult } from '@/types/camera';
+import type { CameraPermissionResult, CameraResult } from '@/types/camera';
+
+export async function checkCameraPermission():
+    Promise<CameraPermissionResult> {
+    try {
+        const permission =
+            await ImagePicker.getCameraPermissionsAsync();
+
+        if (permission.granted) {
+            return { status: 'granted' };
+        }
+
+        return {
+            status: 'permission-denied',
+            canAskAgain: permission.canAskAgain,
+        };
+    } catch (error) {
+        console.warn(
+            'Error al consultar el permiso de cámara:',
+            error
+        );
+
+        return { status: 'error' };
+    }
+}
 
 export async function capturePhoto(): Promise<CameraResult> {
     try {

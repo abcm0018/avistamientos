@@ -24,7 +24,7 @@ export default function LocationScreen() {
     }>();
 
     const { isLoading, requestLocation } = useLocationRequest();
-    const { saveDraft } = useSighting();
+    const { saveDraft, savePendingLocation, clearPendingLocation } = useSighting();
 
     const [isCameraActive, setIsCameraActive] = useState(false);
     const requestInProgress = useRef(false);
@@ -218,6 +218,8 @@ export default function LocationScreen() {
                     return;
                 }
 
+                savePendingLocation(location);
+
                 const cameraResult = await capturePhoto();
 
                 if (!screenFocused.current) {
@@ -237,6 +239,7 @@ export default function LocationScreen() {
                         break;
 
                     case 'cancelled':
+                        clearPendingLocation();
                         router.replace(ROUTES.home);
                         break;
 
@@ -268,7 +271,7 @@ export default function LocationScreen() {
                 }
             }
         },
-        [saveDraft, waitForForeground]
+        [saveDraft, savePendingLocation, clearPendingLocation, waitForForeground]
     );
 
     useEffect(() => {

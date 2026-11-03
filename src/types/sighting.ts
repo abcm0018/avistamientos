@@ -14,8 +14,11 @@ export type SightingDraft = {
 
 export type SightingContextValue = {
     draft: SightingDraft | null;
+    pendingLocation: LocationObject | null;
     saveDraft: (draft: SightingDraft) => void;
     clearDraft: () => void;
+    savePendingLocation: (location: LocationObject) => void;
+    clearPendingLocation: () => void;
 }
 
 export type ValidatedSightingDraft = SightingDraft & {

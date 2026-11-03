@@ -7,4 +7,5 @@ export const ROUTES = {
     location: '/location',
     photoReview: '/photoReview',
     sighting: '/sighting',
+    camera: '/camera',
 }as const;
