@@ -8,4 +8,5 @@ export const ROUTES = {
     photoReview: '/photoReview',
     sighting: '/sighting',
     camera: '/camera',
+    submissionResult: '/submission-result',
 }as const;

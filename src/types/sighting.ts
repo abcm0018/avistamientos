@@ -1,5 +1,6 @@
 import type { ImagePickerAsset } from "expo-image-picker";
 import type { LocationObject } from "expo-location";
+import { SightingSubmissionResult } from "./sightingApi";
 
 export type SightingType = 'adult' | 'nest';
 
@@ -19,6 +20,12 @@ export type SightingContextValue = {
     clearDraft: () => void;
     savePendingLocation: (location: LocationObject) => void;
     clearPendingLocation: () => void;
+    getSubmissionKey: (fingerprint: string) => string;
+    submissionConfirmed: boolean;
+    confirmSubmission: () => void;
+    submissionResult: SightingSubmissionResult | null;
+    saveSubmissionResult: (result: SightingSubmissionResult) => void;
+    clearSubmissionResult: () => void;
 }
 
 export type ValidatedSightingDraft = SightingDraft & {
