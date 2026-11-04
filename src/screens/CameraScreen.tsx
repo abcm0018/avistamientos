@@ -11,6 +11,7 @@ import { openDeviceSettings } from '@/services/devicesSettings';
 import { isValidPhotoLocation, obtainLocation } from '@/services/location';
 import { styles } from '@/styles/location';
 import type { CameraPermissionResult } from '@/types/camera';
+import type { LocationResult } from '@/types/location';
 import {
     router,
     Stack,
@@ -102,11 +103,21 @@ export default function CameraScreen() {
         setLocationProblem(null);
 
         try {
-            // Obtenemos una posición actual aunque la anterior sea reciente.
-            const locationResult = await obtainLocation({
-                requestPermission: false,
-                forPhoto: true,
-            });
+            let locationResult: LocationResult;
+
+            if (!isRetake && isValidPhotoLocation(location)) {
+                // Reutilizamos la ubicación pendiente si sigue siendo válida.
+                locationResult = {
+                    ok: true,
+                    location,
+                };
+            } else {
+                // Obtenemos una nueva ubicación si es necesario.
+                locationResult = await obtainLocation({
+                    requestPermission: false,
+                    forPhoto: true,
+                });
+            }
 
             if (!focused.current) {
                 return;

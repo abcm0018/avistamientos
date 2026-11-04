@@ -13,7 +13,7 @@ import type { LocationResult } from "@/types/location";
 import { Image } from "expo-image";
 import { SymbolView } from "expo-symbols";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ActivityIndicator, Alert, AppState, Platform, Pressable, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, AppState, Platform, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 
@@ -244,23 +244,21 @@ export default function LocationScreen() {
                         break;
 
                     case 'permission-denied':
-                        router.replace(ROUTES.home);
-
-                        Alert.alert(
-                            'Permiso de cámara necesario',
-                            cameraResult.canAskAgain
-                                ? 'Permite el acceso a la cámara para tomar la fotografía. Puedes volver a intentarlo desde el inicio.'
-                                : 'Habilita el permiso de cámara en los ajustes de la aplicación.'
-                        );
-                        break;
-
                     case 'error':
-                        router.replace(ROUTES.home);
-
-                        Alert.alert(
-                            'No se pudo completar la captura',
-                            'Puedes volver a intentarlo desde el inicio.'
-                        );
+                        router.replace({
+                            pathname: ROUTES.camera,
+                            params: {
+                                mode: 'initial',
+                                reason: cameraResult.status,
+                                ...(cameraResult.status === 'permission-denied'
+                                    ? {
+                                        canAskAgain: String(
+                                            cameraResult.canAskAgain
+                                        ),
+                                    }
+                                    : {}),
+                            },
+                        });
                         break;
                 }
             } finally {

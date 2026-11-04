@@ -81,10 +81,6 @@ export const PhotoReviewScreen = () => {
                                 : {}),
                         },
                     });
-                    Alert.alert(
-                    'No se pudo completar la captura',
-                    'Puedes volver a intentarlo.'
-                    );
                     break;
             };
         } finally {
