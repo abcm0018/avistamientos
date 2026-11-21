@@ -20,7 +20,8 @@ const species = [
 ];
 const sources = [
   { label: 'MITECO · Memoria técnica de Vespa orientalis (PDF)', url: 'https://www.miteco.gob.es/content/dam/miteco/es/biodiversidad/temas/conservacion-de-especies/MTJ-Vespa-orientalis.pdf' },
-  { label: 'Junta de Andalucía · Especies exóticas invasoras', url: 'https://www.juntadeandalucia.es/medioambiente/portal/servicios/servicio-informacion-atencion-ciudadania/preguntas-frecuentes/especies-exoticas-invasoras' },
+  { label: 'MITECO · Memoria técnica de Vespa spp.: identificación de V. velutina (PDF)', url: 'https://www.miteco.gob.es/content/dam/miteco/es/biodiversidad/temas/conservacion-de-especies/mtjvespaspp_tcm30-69896.pdf' },
+  { label: 'Junta de Andalucía · Pregunta 20: avispón oriental, presencia y gestión de nidos', url: 'https://www.juntadeandalucia.es/medioambiente/portal/servicios/servicio-informacion-atencion-ciudadania/preguntas-frecuentes/especies-exoticas-invasoras' },
   { label: 'BOE · Orden TED/452/2025', url: 'https://www.boe.es/eli/es/o/2025/05/05/ted452' },
   { label: 'Vespa orientalis · Charles J. Sharp · Original en Wikimedia Commons', url: 'https://commons.wikimedia.org/wiki/File:Oriental_hornet_(Vespa_orientalis).jpg' },
   { label: 'Vespa velutina · Eastolany · Original en Wikimedia Commons', url: 'https://commons.wikimedia.org/wiki/File:Asian_Hornet.jpg' },
@@ -93,7 +94,7 @@ export default function AboutSpeciesScreen() {
             <Section title="No la confundas" intro="Puede parecerse a otras especies. Fíjate en estas diferencias principales">
               <View style={[styles.cards, comparisonColumns && styles.row]}>
                 {species.map((item) => <View key={item.scientific} style={[styles.speciesCard, comparisonColumns && styles.column]}>
-                  <Image source={item.image} style={styles.comparisonImage} contentFit="contain" accessible accessibilityLabel={`Fotografía de ${item.scientific}`} />
+                  <Image source={item.image} style={styles.comparisonImage} contentFit="cover" contentPosition="center" accessible accessibilityLabel={`Fotografía de ${item.scientific}`} />
                   <View style={styles.speciesText}>
                     <Text style={styles.cardTitle}>{item.name}</Text>
                     <Text style={styles.scientific}>{item.scientific}</Text>
@@ -101,7 +102,6 @@ export default function AboutSpeciesScreen() {
                   </View>
                 </View>)}
               </View>
-              <Text style={styles.note}>Estas diferencias son orientativas y no constituyen una identificación científica definitiva.</Text>
             </Section>
             <Section title="Presencia y nidos" intro="Información básica sobre su presencia en nuestro entorno y sus nidos">
               <View style={[styles.infoCard, compactRows && styles.row]}>
@@ -133,8 +133,9 @@ export default function AboutSpeciesScreen() {
                 <Icon name={creditsOpen ? { ios: 'chevron.up', android: 'expand_less', web: 'expand_less' } : { ios: 'chevron.down', android: 'expand_more', web: 'expand_more' }} />
               </Pressable>
               {creditsOpen && <View style={styles.cards}>
-                <Text style={styles.note}>Vespa orientalis fue incorporada al Catálogo Español de Especies Exóticas Invasoras mediante la Orden TED/452/2025. Las referencias normativas anteriores pueden estar desactualizadas.</Text>
-                <Text style={styles.note}>Fotografías reales: Charles J. Sharp (Vespa orientalis) y Eastolany (Vespa velutina), ambas CC BY-SA 4.0. Copias reducidas a 960 píxeles; los tres detalles son recortes de la fotografía de Charles J. Sharp. Las copias y los recortes mantienen la licencia CC BY-SA 4.0. La imagen original de Sharp combina varias tomas mediante apilamiento de enfoque, según su autor.</Text>
+                <Text style={styles.note}>Las memorias del MITECO respaldan los rasgos de identificación, la biología y los impactos descritos. La pregunta 20 de la Junta de Andalucía documenta la presencia de la avispa oriental y recomienda que solo profesionales capacitados retiren los nidos.</Text>
+                <Text style={styles.note}>La memoria de Vespa orientalis contiene información legal anterior a su inclusión en el Catálogo Español de Especies Exóticas Invasoras. Para esta inclusión, consulta el artículo segundo de la Orden TED/452/2025, publicada el 12 de mayo de 2025.</Text>
+                <Text style={styles.note}>Fotografías reales: Charles J. Sharp (Vespa orientalis) y Eastolany (Vespa velutina), ambas CC BY-SA 4.0. Copias reducidas a 960 píxeles y encuadre central en la comparativa; los tres detalles son recortes de la fotografía de Charles J. Sharp. Las copias y los recortes mantienen la licencia CC BY-SA 4.0. La imagen original de Sharp combina varias tomas mediante apilamiento de enfoque, según su autor.</Text>
                 {sources.map((source) => <Pressable key={source.url} accessibilityRole="link" accessibilityHint="Abre una fuente externa; requiere conexión a Internet" onPress={() => void openSource(source.url)} style={({ pressed }) => [styles.sourceLink, pressed && styles.pressed]}>
                   <Text style={styles.linkText}>{source.label}</Text>
                 </Pressable>)}

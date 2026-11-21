@@ -18,7 +18,7 @@ export default function InitScreen() {
         <ImageBackground 
              source={require('../../assets/images/avispa.png')}
              style={styles.container}
-             resizeMode="contain">
+             resizeMode="cover">
                 <SafeAreaView style={styles.safeArea}>
                     <View style={styles.overlay}>
                             <View style={styles.header}>

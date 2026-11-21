@@ -30,7 +30,6 @@ const sections: ProjectSection[] = [
   {
     title: 'Tecnología e investigación',
     text: 'El proyecto contempla incorporar herramientas de inteligencia artificial para apoyar la clasificación de imágenes y mecanismos de revisión científica para verificar las identificaciones',
-    note: 'Estas funcionalidades forman parte del desarrollo previsto del proyecto',
     icon: { ios: 'cpu', android: 'memory', web: 'memory' },
   },
 ];
@@ -74,7 +73,6 @@ export default function AboutProjectScreen() {
                 <View style={styles.copy}>
                   <Text accessibilityRole="header" style={shared.cardTitle}>{section.title}</Text>
                   <Text style={shared.body}>{section.text}</Text>
-                  {section.note && <Text style={shared.note}>{section.note}</Text>}
                 </View>
               </View>
             ))}

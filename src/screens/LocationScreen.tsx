@@ -303,8 +303,9 @@ export default function LocationScreen() {
 
                 async function checkAfterSettings() {
                     try {
+                        // «Preguntar siempre» requiere solicitar el permiso de nuevo.
                         const result = await requestLocation({
-                            requestPermission: false,
+                            requestPermission: true,
                         });
 
                         if (
