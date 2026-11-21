@@ -2,6 +2,7 @@ import { ColorsApp } from '@/constants/theme';
 import { ROUTES } from '@/navigation/routes';
 import { styles } from '@/styles/aboutProject';
 import { styles as shared } from '@/styles/aboutSpecies';
+import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { useState, type ComponentProps } from 'react';
@@ -9,7 +10,7 @@ import { Pressable, ScrollView, Text, View, useWindowDimensions } from 'react-na
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 type IconName = ComponentProps<typeof SymbolView>['name'];
-type ProjectSection = { title: string; text: string; icon: IconName; note?: string; academic?: boolean };
+type ProjectSection = { title: string; text: string; icon: IconName; note?: string };
 
 const sections: ProjectSection[] = [
   {
@@ -39,6 +40,8 @@ export default function AboutProjectScreen() {
   const [contentWidth, setContentWidth] = useState(0);
   // Stack icons above the text on narrow screens or with enlarged system fonts.
   const rows = contentWidth >= 320 * fontScale;
+  // Account for the card's padding and border on both sides.
+  const academicLogoWidth = Math.min(200, Math.max(0, contentWidth - 34));
 
   return (
     <View style={shared.screen}>
@@ -66,7 +69,7 @@ export default function AboutProjectScreen() {
               <Text style={shared.body}>Una iniciativa tecnológica para facilitar el conocimiento y seguimiento de la avispa oriental y otras especies de insectos invasores mediante la colaboración ciudadana</Text>
             </View>
             {sections.map((section) => (
-              <View key={section.title} style={[shared.section, styles.card, section.academic && styles.academic, rows && shared.row]}>
+              <View key={section.title} style={[shared.section, styles.card, rows && shared.row]}>
                 <View style={shared.iconCircle}>
                   <SymbolView name={section.icon} size={28} tintColor={ColorsApp.primary} accessible={false} />
                 </View>
@@ -76,6 +79,40 @@ export default function AboutProjectScreen() {
                 </View>
               </View>
             ))}
+            <View style={[shared.section, styles.academic]}>
+              {/* Official horizontal positive PNG, unchanged, from the UJA brand resources:
+                  https://www.ujaen.es/gobierno/viccom/marca-universidad-de-jaen
+                  Archive: 1. Marca Universidad de Jaén_0.zip; horizontal / principal / positivo.
+                  Logo usage conditions remain pending confirmation before public distribution. */}
+              <Image
+                source={require('../../assets/images/uja-logo-horizontal.png')}
+                style={[styles.academicLogo, {
+                  width: academicLogoWidth,
+                  // Reclaim transparent PNG margins without cropping the image.
+                  marginVertical: -academicLogoWidth * 0.15,
+                }]}
+                contentFit="contain"
+                accessible
+                accessibilityLabel="Universidad de Jaén"
+              />
+              <View style={styles.academicHeading}>
+                <Text accessibilityRole="header" style={[shared.cardTitle, styles.academicTitle]}>Créditos académicos</Text>
+                <Text style={styles.academicSubtitle}>Trabajo Fin de Máster</Text>
+              </View>
+              <View style={styles.academicField}>
+                <Text style={styles.academicLabel}>Título oficial del TFM</Text>
+                <Text style={styles.academicValue}>Web Application for Citizen-Assisted Tracking and AI-Driven Identification of Invasive Insect Species.</Text>
+              </View>
+              <View style={styles.academicField}>
+                <Text style={styles.academicLabel}>Autora</Text>
+                <Text style={styles.academicValue}>Ana Belén Cabello Martínez</Text>
+              </View>
+              <View style={styles.academicField}>
+                <Text style={styles.academicLabel}>Tutores</Text>
+                <Text style={styles.academicValue}>Juan Carlos Cuevas Martínez</Text>
+                <Text style={styles.academicValue}>José Manuel Pérez Lorenzo</Text>
+              </View>
+            </View>
           </View>
         </ScrollView>
       </SafeAreaView>
