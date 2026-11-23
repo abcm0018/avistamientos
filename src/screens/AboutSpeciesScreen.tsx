@@ -17,15 +17,23 @@ const traits = [
 const species = [
   { name: 'Avispa oriental', scientific: 'Vespa orientalis', image: oriental, text: 'Cuerpo predominantemente rojizo, con marcas amarillas en la cara y el abdomen' },
   { name: 'Avispa asiática', scientific: 'Vespa velutina', image: require('../../assets/images/species/vespa-velutina.jpg'), text: 'Tórax mucho más oscuro y una banda anaranjada destacada hacia el extremo del abdomen' },
+  { name: 'Avispón europeo', scientific: 'Vespa crabro', image: require('../../assets/images/species/vespa-crabro.jpg'), text: 'Coloración marrón rojiza, con marcas negras y abdomen ampliamente amarillo hasta su extremo'},
+  { name: 'Avispón bicolor', scientific: 'Vespa bicolor', image: require('../../assets/images/species/vespa-bicolor.jpg'), text: 'Cuerpo predominantemente amarillo, con una mancha negra destacada en el tórax' },
+  { name: 'Avispa mamut', scientific: 'Megascolia maculata', image: require('../../assets/images/species/megascolia-maculata.jpg'), text: 'Gran tamaño, cuerpo oscuro con manchas amarillas destacadas en el abdomen y antenas negras'},
 ];
 const sources = [
-  { label: 'MITECO · Memoria técnica de Vespa orientalis (PDF)', url: 'https://www.miteco.gob.es/content/dam/miteco/es/biodiversidad/temas/conservacion-de-especies/MTJ-Vespa-orientalis.pdf' },
-  { label: 'MITECO · Memoria técnica de Vespa spp.: identificación de V. velutina (PDF)', url: 'https://www.miteco.gob.es/content/dam/miteco/es/biodiversidad/temas/conservacion-de-especies/mtjvespaspp_tcm30-69896.pdf' },
+  { label: 'MITECO · Memoria técnica de Vespa orientalis (PDF)', url: 'https://www.miteco.gob.es/content/dam/miteco/es/biodiversidad/temas/conservacion-de-especies/MTJ-Vespa-orientalis.pdf'},
+  { label: 'MITECO · Memoria técnica de Vespa spp.: identificación de V. velutina, V. crabro y V. bicolor (PDF)', url: 'https://www.miteco.gob.es/content/dam/miteco/es/biodiversidad/temas/conservacion-de-especies/mtjvespaspp_tcm30-69896.pdf'},
+  { label: 'Generalitat Valenciana · Ficha 7: Megascolia (PDF)', url: 'https://www.uv.es/museuhn/Biodiversidad/Fichas_de_identificacion_avispa_asiatica_y_proximas.pdf'},
   { label: 'Junta de Andalucía · Pregunta 20: avispón oriental, presencia y gestión de nidos', url: 'https://www.juntadeandalucia.es/medioambiente/portal/servicios/servicio-informacion-atencion-ciudadania/preguntas-frecuentes/especies-exoticas-invasoras' },
-  { label: 'BOE · Orden TED/452/2025', url: 'https://www.boe.es/eli/es/o/2025/05/05/ted452' },
-  { label: 'Vespa orientalis · Charles J. Sharp · Original en Wikimedia Commons', url: 'https://commons.wikimedia.org/wiki/File:Oriental_hornet_(Vespa_orientalis).jpg' },
-  { label: 'Vespa velutina · Eastolany · Original en Wikimedia Commons', url: 'https://commons.wikimedia.org/wiki/File:Asian_Hornet.jpg' },
-  { label: 'Licencia de ambas fotografías y sus recortes · CC BY-SA 4.0', url: 'https://creativecommons.org/licenses/by-sa/4.0/' },
+  { label: 'BOE · Orden TED/452/2025', url: 'https://www.boe.es/eli/es/o/2025/05/05/ted452'},
+  { label: 'Vespa orientalis · Charles J. Sharp · CC BY-SA 4.0 · Original en Wikimedia Commons', url: 'https://commons.wikimedia.org/wiki/File:Oriental_hornet_(Vespa_orientalis).jpg'},
+  { label: 'Vespa velutina · Eastolany · CC BY-SA 4.0 · Original en Wikimedia Commons', url: 'https://commons.wikimedia.org/wiki/File:Asian_Hornet.jpg'},
+  { label: 'Vespa crabro · Luis Fernández García · CC BY-SA 4.0 · Original en Wikimedia Commons', url: 'https://commons.wikimedia.org/wiki/File:Vespa_crabro_20210911a.jpg'},
+  { label: 'Vespa bicolor · Charles Lam · CC BY-SA 2.0 · Original en Wikimedia Commons', url: 'https://commons.wikimedia.org/wiki/File:Vespa_bicolor.jpg'},
+  { label: 'Megascolia maculata · Fabcillo · CC BY-SA 4.0 · Original en Wikimedia Commons', url: 'https://commons.wikimedia.org/wiki/File:240616_Megascolia_maculata.jpg'},
+  { label: 'Licencia de las fotografías de V. orientalis, V. velutina, V. crabro y M. maculata y sus recortes · CC BY-SA 4.0', url: 'https://creativecommons.org/licenses/by-sa/4.0/'},
+  { label: 'Licencia de la fotografía de Vespa bicolor · CC BY-SA 2.0', url: 'https://creativecommons.org/licenses/by-sa/2.0/'},
 ];
 
 type IconName = ComponentProps<typeof SymbolView>['name'];
@@ -49,6 +57,16 @@ export default function AboutSpeciesScreen() {
   const traitColumns = contentWidth >= 600 * fontScale;
   const comparisonColumns = contentWidth >= 360 * fontScale;
   const compactRows = contentWidth >= 280 * fontScale;
+
+  const speciesPerRow = comparisonColumns ? 2 : 1;
+  const speciesRows = Array.from(
+    { length: Math.ceil(species.length / speciesPerRow) },
+    (_, index) =>
+      species.slice(
+        index * speciesPerRow,
+        (index + 1) * speciesPerRow,
+      ),
+  );
 
   async function openSource(url: string) {
     setLinkError(false);
@@ -91,16 +109,45 @@ export default function AboutSpeciesScreen() {
                 </View>)}
               </View>
             </Section>
-            <Section title="No la confundas" intro="Puede parecerse a otras especies. Fíjate en estas diferencias principales">
-              <View style={[styles.cards, comparisonColumns && styles.row]}>
-                {species.map((item) => <View key={item.scientific} style={[styles.speciesCard, comparisonColumns && styles.column]}>
-                  <Image source={item.image} style={styles.comparisonImage} contentFit="cover" contentPosition="center" accessible accessibilityLabel={`Fotografía de ${item.scientific}`} />
-                  <View style={styles.speciesText}>
-                    <Text style={styles.cardTitle}>{item.name}</Text>
-                    <Text style={styles.scientific}>{item.scientific}</Text>
-                    <Text style={styles.body}>{item.text}.</Text>
+            <Section
+              title="No la confundas"
+              intro="Puede parecerse a otras especies. Fíjate en estas diferencias principales"
+            >
+              <View style={styles.cards}>
+                {speciesRows.map((items, rowIndex) => (
+                  <View
+                    key={rowIndex}
+                    style={[styles.cards, comparisonColumns && styles.row]}
+                  >
+                    {items.map((item) => (
+                      <View
+                        key={item.scientific}
+                        style={[
+                          styles.speciesCard,
+                          comparisonColumns && styles.column,
+                        ]}
+                      >
+                        <Image
+                          source={item.image}
+                          style={styles.comparisonImage}
+                          contentFit="cover"
+                          contentPosition="center"
+                          accessible
+                          accessibilityLabel={`Fotografía de ${item.scientific}`}
+                        />
+                        <View style={styles.speciesText}>
+                          <Text style={styles.cardTitle}>{item.name}</Text>
+                          <Text style={styles.scientific}>{item.scientific}</Text>
+                          <Text style={styles.body}>{item.text}.</Text>
+                        </View>
+                      </View>
+                    ))}
+
+                    {comparisonColumns && items.length === 1 && (
+                      <View style={styles.column} accessible={false} />
+                    )}
                   </View>
-                </View>)}
+                ))}
               </View>
             </Section>
             <Section title="Presencia y nidos" intro="Información básica sobre su presencia en nuestro entorno y sus nidos">
@@ -132,15 +179,74 @@ export default function AboutSpeciesScreen() {
                 <Text style={styles.creditsLabel}>Fuentes y créditos fotográficos</Text>
                 <Icon name={creditsOpen ? { ios: 'chevron.up', android: 'expand_less', web: 'expand_less' } : { ios: 'chevron.down', android: 'expand_more', web: 'expand_more' }} />
               </Pressable>
-              {creditsOpen && <View style={styles.cards}>
-                <Text style={styles.note}>Las memorias del MITECO respaldan los rasgos de identificación, la biología y los impactos descritos. La pregunta 20 de la Junta de Andalucía documenta la presencia de la avispa oriental y recomienda que solo profesionales capacitados retiren los nidos.</Text>
-                <Text style={styles.note}>La memoria de Vespa orientalis contiene información legal anterior a su inclusión en el Catálogo Español de Especies Exóticas Invasoras. Para esta inclusión, consulta el artículo segundo de la Orden TED/452/2025, publicada el 12 de mayo de 2025.</Text>
-                <Text style={styles.note}>Fotografías reales: Charles J. Sharp (Vespa orientalis) y Eastolany (Vespa velutina), ambas CC BY-SA 4.0. Copias reducidas a 960 píxeles y encuadre central en la comparativa; los tres detalles son recortes de la fotografía de Charles J. Sharp. Las copias y los recortes mantienen la licencia CC BY-SA 4.0. La imagen original de Sharp combina varias tomas mediante apilamiento de enfoque, según su autor.</Text>
-                {sources.map((source) => <Pressable key={source.url} accessibilityRole="link" accessibilityHint="Abre una fuente externa; requiere conexión a Internet" onPress={() => void openSource(source.url)} style={({ pressed }) => [styles.sourceLink, pressed && styles.pressed]}>
-                  <Text style={styles.linkText}>{source.label}</Text>
-                </Pressable>)}
-                {linkError && <Text accessibilityRole="alert" style={styles.body}>No se ha podido abrir el enlace. Comprueba tu conexión y vuelve a intentarlo.</Text>}
-              </View>}
+              {creditsOpen && (
+                <View style={styles.cards}>
+                  <Text style={styles.note}>
+                    Las memorias del MITECO respaldan los rasgos de identificación,
+                    la biología y los impactos descritos. La pregunta 20 de la Junta
+                    de Andalucía documenta la presencia de la avispa oriental y
+                    recomienda que solo profesionales capacitados retiren los nidos.
+                  </Text>
+
+                  <Text style={styles.note}>
+                    La memoria de Vespa spp. respalda también las diferencias de
+                    Vespa crabro y Vespa bicolor. La ficha 7 de la Generalitat
+                    Valenciana documenta los rasgos de Megascolia y las antenas
+                    negras de Megascolia maculata.
+                  </Text>
+
+                  <Text style={styles.note}>
+                    La memoria de Vespa orientalis contiene información legal anterior
+                    a su inclusión en el Catálogo Español de Especies Exóticas
+                    Invasoras. Para esta inclusión, consulta el artículo segundo de
+                    la Orden TED/452/2025, publicada el 12 de mayo de 2025.
+                  </Text>
+
+                  <Text style={styles.note}>
+                    Fotografías reales: Charles J. Sharp (Vespa orientalis) y
+                    Eastolany (Vespa velutina), ambas CC BY-SA 4.0.
+                  </Text>
+
+                  <Text style={styles.note}>
+                    Fotografías añadidas: Luis Fernández García (Vespa crabro,
+                    CC BY-SA 4.0), Charles Lam (Vespa bicolor, CC BY-SA 2.0) y
+                    Fabcillo (Megascolia maculata, CC BY-SA 4.0).
+
+                    Las fotografías incorporadas tienen distintas resoluciones
+                    y conservan las licencias indicadas por sus autores.
+                    En la comparativa se muestran mediante un encuadre central
+                    cuadrado que puede ocultar parte de sus bordes, sin
+                    modificar los archivos almacenados.
+
+                    Puedes consultar las fuentes originales, las dimensiones
+                    de las imágenes y las condiciones de sus licencias
+                    en los créditos fotográficos del proyecto.
+                    No se implica respaldo de los autores a esta aplicación.
+                  </Text>
+
+                  {sources.map((source) => (
+                    <Pressable
+                      key={source.url}
+                      accessibilityRole="link"
+                      accessibilityHint="Abre una fuente externa; requiere conexión a Internet"
+                      onPress={() => void openSource(source.url)}
+                      style={({ pressed }) => [
+                        styles.sourceLink,
+                        pressed && styles.pressed,
+                      ]}
+                    >
+                      <Text style={styles.linkText}>{source.label}</Text>
+                    </Pressable>
+                  ))}
+
+                  {linkError && (
+                    <Text accessibilityRole="alert" style={styles.body}>
+                      No se ha podido abrir el enlace. Comprueba tu conexión y
+                      vuelve a intentarlo.
+                    </Text>
+                  )}
+                </View>
+              )}
             </View>
           </View>
         </ScrollView>
