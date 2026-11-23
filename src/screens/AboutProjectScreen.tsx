@@ -1,3 +1,5 @@
+import { AcademicLink } from '@/components/AcademicLink';
+
 import { ColorsApp } from '@/constants/theme';
 import { ROUTES } from '@/navigation/routes';
 import { styles } from '@/styles/aboutProject';
@@ -100,6 +102,13 @@ export default function AboutProjectScreen() {
                 <Text style={styles.academicSubtitle}>Trabajo Fin de Máster</Text>
               </View>
               <View style={styles.academicField}>
+                <Text style={styles.academicLabel}>Titulación</Text>
+                <AcademicLink
+                  name="Máster Universitario en Ingeniería de Telecomunicación"
+                  href="https://www.ujaen.es/estudios/oferta-academica/en/masters-programs/masters-degree-science-telecommunication-engineering"
+                />
+              </View>
+              <View style={styles.academicField}>
                 <Text style={styles.academicLabel}>Título oficial del TFM</Text>
                 <Text style={styles.academicValue}>Web Application for Citizen-Assisted Tracking and AI-Driven Identification of Invasive Insect Species.</Text>
               </View>
@@ -109,8 +118,15 @@ export default function AboutProjectScreen() {
               </View>
               <View style={styles.academicField}>
                 <Text style={styles.academicLabel}>Tutores</Text>
-                <Text style={styles.academicValue}>Juan Carlos Cuevas Martínez</Text>
-                <Text style={styles.academicValue}>José Manuel Pérez Lorenzo</Text>
+                <AcademicLink name= "Juan Carlos Cuevas Martínez" href="https://www.ujaen.es/departamentos/ingtel/contactos/cuevas-martinez-juan-carlos" />
+                <AcademicLink name= "José Manuel Pérez Lorenzo" href="https://investigacion.ujaen.es/investigadores/191168/detalle" />
+              </View>
+              <View style={styles.academicField}>
+                <Text style={styles.academicLabel}>Colaboración en el proyecto</Text>
+                <AcademicLink
+                  name="Antonio José Ortiz Hernández"
+                  href="https://www.ujaen.es/investigacion-y-transferencia/contactos/antonio-jose-ortiz-hernandez-0"
+                />
               </View>
             </View>
           </View>
